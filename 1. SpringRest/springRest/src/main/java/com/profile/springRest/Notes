@@ -1,0 +1,103 @@
+What is REST?
+    Representational State Transfer (REST)
+    It transfers data in global format(representational) between two different applications running on different servers.
+
+    Consumer/Client --> requests data
+    Producer --> provides data
+
+    REST is an architectural style that follows a set of rules to create webservices
+    It provides usable data to multiple applications and interpolability between them on internet.
+
+How will you define a development of REST API?
+
+    It is a specific architectural style to avail data reusability between interpolable applications.
+
+What is RestController?
+
+    RestController is a mandatory class which acts as front controller.
+
+    Its methods return Body and Status as a ResponseEntity Object
+
+    Body- Data in the form of string,object,collections etc
+    Status - 200,404, 405, 500 etc
+
+Please refer custom exceptions, utility defined in this project.
+
+________________________________________________________________________________________________________________________
+CONSUMER API
+________________________________________________________________________________________________________________________
+
+Apart from presentation layer, Data layer, Service layer.
+We have another layer called Integration layer
+
+This layer connects two different applications to exchange data between them
+One applicatio is Producer -- where as other referes to Consumer
+
+Consumer API could be writtern using RESt template
+(The Spring Rest Client)
+
+WHat is REST Template?
+    predefined class
+    helps in making http calls to Producer application
+    for all methods - GET,POST,PUT,PATCH,DELETE.
+    It also supports JSON/XML to Object and vice versa
+
+    Required details for template-- IP, PORT, Paths, Method Type, Input data format, Output data format etc.
+    provides exchange() method to consume all the HTTP methods.
+
+getForObject() and getForEntity()
+    getForObject(url,T class) - retrieves an entity via GET on given URL. return T(Only response body-no status or header params)
+    getForEntity(url,T class)-- same but instead of return T, it returns ResponseEntity<T>
+
+postForObject() and postForEntity()
+    postForObject(url,T class) - saves an entity via POST on given URL. return T(Only response body-no status or header params)
+    postForEntity(url,T class)-- same but instead of return T, it returns ResponseEntity<T>
+
+exchange() method
+    supports making call to any Http method
+    SYNTAX - exchange(String url, HttpMethod method, HttpEntity<?> requestEntity, Class<T> responseType, Object...urivariables):ResponseEntity<T>
+
+    url: Producer application URL (RestController's method path)
+    HttpMethod : is an enum to provide method type.
+    HttpEntity : Request Body + HttpHeaders (it can also be null)
+    responseType : Class type of response
+    Object-var/args : used for sending multiple pathVariables
+
+What is the format of data Consumer Application receives from Producer Application ?
+    if any restcontroller method returns a non string type i.e class or collection. Then data is converted into JSON and
+    provided to Consumer application
+
+    Consumer application reads that data as string
+
+What all parameters are expected to write consumer methods in RestTemplate ?
+    1. URL of producer web service
+    2. Body of request (POST/PUT)
+    3. Media Type (APPLICATION_JSON or _XML, APPLICATION_PDF) (POST/PUT)
+    4. HTTP MEthod Type
+    5. Return type of producer method
+    6. Path variables (if any)
+
+Implementation
+Refer Runner.class
+and bean injection for RestTemplate in Spring main()
+
+How to convert Response Entity into Java Object?
+    1. Using getForEntity() from restTemplate class and return the response as array of objects.
+    ResponseEntity<Invoice[]> response = restTemplate.getForEntity(url,invoice[].class);
+    //converting response in pure array
+    Invoice[] invs = response.getBody();
+    //converting array into List
+    List<Invoice> list = Arrays.asList(invs);
+    Sysout(list);
+
+    2. Using exchange()
+    ResponseEntity<List<Invoice>> response = restTemplate.exchange(url,HttpMethod.GET,null, new ParametrizedTypeReference<List<invoice>>(){});
+    List<invoice> list = response.getBody();
+    Sysyout(list)
+
+    3. By using exchange() method and returning array of objects
+    Similar as 2 but Prametrized type reference for array
+
+
+
+
